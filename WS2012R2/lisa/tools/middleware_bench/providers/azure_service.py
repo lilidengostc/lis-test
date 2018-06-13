@@ -335,9 +335,13 @@ class AzureConnector:
         while (True):
             time.sleep(60)
             vm_instance = self.compute_client.virtual_machines.get(self.group_name, vm_name, expand='instanceView')
+            vm_status = ''
             for stat in vm_instance.instance_view.statuses:
                 log.info('code: {}'.format(stat.code))
                 log.info('displayStatus: {}'.format(stat.display_status))
+                vm_status = stat.display_status
+            if ('running' in vm_status):
+                break
 
         return vm_instance
 
